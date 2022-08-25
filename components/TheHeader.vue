@@ -8,12 +8,24 @@
       </router-link>
       <v-spacer />
       <!-- メニューアイコン -->
+      <v-btn color="blue-grey lighten-1" icon @click.stop="drawer = !drawer">
+        <v-icon>mdi-menu</v-icon>
+      </v-btn>
     </v-app-bar>
+
+    <Menu v-model="drawer" />
   </div>
 </template>
 
 <script>
+import Menu from '../components/BaseMenu.vue';
 export default {
-  name: 'TheHeader'
+  components: { Menu },
+  name: 'TheHeader',
+  data() {
+    return {
+      drawer: false,
+    };
+  },
 }
 </script>
