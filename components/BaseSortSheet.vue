@@ -73,13 +73,13 @@ export default {
   methods: {
     // チェックボタンとして表示される自治体をすべて取得
     getAdministrations() {
-      this.$axios.get("/api/administrations").then((res) => {
+      this.$axios.get('/administrations').then((res) => {
         this.administrations = res.data.administrations;
       });
     },
     // ラジオボタンとして表示されるサービスをすべて取得
     getServices() {
-      this.$axios.get("/api/services").then((res) => {
+      this.$axios.get('/services').then((res) => {
         this.services = res.data.services;
       });
     },
@@ -91,21 +91,23 @@ export default {
         if (this.administrationGroup.length > 1) {
           this.$axios
             .get(
-              `/api/administrations/${this.administrationGroup[0]}?ids=${this.administrationGroup}&serviceId=${this.radioGroup}`
+              `/administrations/${this.administrationGroup[0]}?ids=${this.administrationGroup}&serviceId=${this.radioGroup}`
             )
             .then((res) => {
               this.libraries = res.data.libraries;
-              console.log(this.libraries)
-              this.$emit("set-library", this.libraries);
+              console.log(this.libraries);
+              this.$emit('set-library', this.libraries);
             });
-        // 選択した自治体が単体の場合
+          // 選択した自治体が単体の場合
         } else if (this.administrationGroup.length === 1) {
           this.$axios
-            .get(`/api/administrations/${this.administrationGroup[0]}?serviceId=${this.radioGroup}`)
+            .get(
+              `/administrations/${this.administrationGroup[0]}?serviceId=${this.radioGroup}`
+            )
             .then((res) => {
               this.libraries = res.data.libraries;
-              console.log(this.libraries)
-              this.$emit("set-library", this.libraries);
+              console.log(this.libraries);
+              this.$emit('set-library', this.libraries);
             });
         } else {
           this.clear();
@@ -116,18 +118,18 @@ export default {
       if (this.administrationGroup.length > 1) {
         this.$axios
           .get(
-            `/api/administrations/${this.administrationGroup[0]}?ids=${this.administrationGroup}`
+            `/administrations/${this.administrationGroup[0]}?ids=${this.administrationGroup}`
           )
           .then((res) => {
             this.libraries = res.data.libraries;
-            this.$emit("set-library", this.libraries);
+            this.$emit('set-library', this.libraries);
           });
       } else if (this.administrationGroup.length === 1) {
         this.$axios
-          .get(`/api/administrations/${this.administrationGroup[0]}`)
+          .get(`/administrations/${this.administrationGroup[0]}`)
           .then((res) => {
             this.libraries = res.data.libraries;
-            this.$emit("set-library", this.libraries);
+            this.$emit('set-library', this.libraries);
           });
       } else {
         this.clear();
@@ -138,32 +140,30 @@ export default {
       // 自治体を踏まえた詳細検索
       if (this.administrationGroup.length > 0) {
         this.$axios
-          .get(
-            `/api/services/${s.id}?administrationId=${this.administrationGroup}`
-          )
+          .get(`/services/${s.id}?administrationId=${this.administrationGroup}`)
           .then((res) => {
             this.libraries = res.data.libraries;
             console.log(this.libraries.length);
-            this.$emit("set-library", this.libraries);
+            this.$emit('set-library', this.libraries);
           });
         return;
       }
       // 自治体を踏めない検索
-      this.$axios.get(`/api/services/${s.id}`).then((res) => {
+      this.$axios.get(`/services/${s.id}`).then((res) => {
         this.libraries = res.data.libraries;
         console.log(this.libraries.length);
-        this.$emit("set-library", this.libraries);
+        this.$emit('set-library', this.libraries);
       });
     },
     // シートを非表示
     resetSheet() {
-      this.$emit("reset-sheet");
+      this.$emit('reset-sheet');
     },
     // 選択をクリア
     clear() {
       this.administrationGroup = [];
       this.radioGroup = 0;
-      this.$emit("clear-sheet");
+      this.$emit('clear-sheet');
     },
   },
 };

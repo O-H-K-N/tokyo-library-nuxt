@@ -30,7 +30,10 @@
     <v-card-subtitle v-else class="ms-5 pb-1">
       {{ marker.close_date_first }}、{{ marker.close_date_second }}
     </v-card-subtitle>
-    <v-card-subtitle v-if="marker.services && marker.services.length" class="pb-0">
+    <v-card-subtitle
+      v-if="marker.services && marker.services.length"
+      class="pb-0"
+    >
       サービス
     </v-card-subtitle>
     <v-card-subtitle
@@ -60,8 +63,8 @@ export default {
   methods: {
     // シートを非表示
     resetSheet() {
-      this.$emit("reset-sheet");
+      this.$emit('reset-sheet');
     },
-  }
+  },
 };
 </script>

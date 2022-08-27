@@ -43,17 +43,21 @@
 
     <!-- 詳細検索シート -->
     <v-bottom-sheet v-model="sortSheet" scrollable hide-overlay>
-      <SortSheet @reset-sheet="resetSortSheet" @clear-sheet="getLibrary" @set-library="setLibrary" />
+      <SortSheet
+        @reset-sheet="resetSortSheet"
+        @clear-sheet="getLibrary"
+        @set-library="setLibrary"
+      />
     </v-bottom-sheet>
   </div>
 </template>
 
 <script>
-import Sheet from "../components/BaseSheet.vue";
-import SortSheet from "../components/BaseSortSheet.vue";
+import Sheet from '../components/BaseSheet.vue';
+import SortSheet from '../components/BaseSortSheet.vue';
 
 export default {
-  name: "IndexPage",
+  name: 'IndexPage',
   components: { Sheet, SortSheet },
   data() {
     return {
@@ -61,8 +65,8 @@ export default {
       location: { lat: 35.6809591, lng: 139.7673068 },
       zoom: 11,
       styleMap: {
-        width: "100%",
-        height: "100%",
+        width: '100%',
+        height: '100%',
       },
       infoOptions: {
         minWidth: 200,
@@ -94,7 +98,7 @@ export default {
   methods: {
     // 図書館一覧を取得
     getLibrary() {
-      this.$axios.get("/api/libraries").then((res) => {
+      this.$axios.get('/libraries').then((res) => {
         this.markers = res.data.libraries;
       });
     },

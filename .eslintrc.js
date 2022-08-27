@@ -5,22 +5,21 @@ module.exports = {
     node: true
   },
   parserOptions: {
-    parser: "@babel/eslint-parser",
+    parser: '@babel/eslint-parser',
     requireConfigFile: false,
   },
   extends: [
-    "@nuxtjs",
-    "plugin:nuxt/recommended",
+    '@nuxtjs',
+    'plugin:nuxt/recommended',
 
   ],
   plugins: [
   ],
   // add your custom rules here
   rules: {
-    quotes: ["error", "double"],
-    "no-console": "off",
-    "space-before-function-paren": "off",
-    "comma-dangle": "off",
-    semi: "off",
+    'no-console': 'off',
+    'space-before-function-paren': 'off',
+    'comma-dangle': 'off',
+    semi: 'off',
   }
 }
