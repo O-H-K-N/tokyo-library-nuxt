@@ -1,5 +1,7 @@
 <template>
-  <v-app dark>
+  <v-app
+    style="color: #455a64; font-family: 'Tsukushi A Round Gothic', '筑紫A丸ゴシック', 'Hiragino Maru Gothic ProN W4', 'ヒラギノ丸ゴ ProN W4';"
+  >
     <Header />
     <v-main>
       <Nuxt />
@@ -8,10 +10,10 @@
 </template>
 
 <script>
-import Header from '../components/TheHeader.vue'
+import Header from "../components/TheHeader.vue";
 
 export default {
+  name: "DefaultLayout",
   components: { Header },
-  name: 'DefaultLayout'
-}
+};
 </script>

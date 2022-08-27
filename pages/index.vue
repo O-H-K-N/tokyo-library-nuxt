@@ -1,9 +1,20 @@
 <template>
   <div class="mv">
     <v-card class="mv-wrap">
+      <v-btn
+        color="orange"
+        outlined
+        rounded
+        style="font-weight: bold"
+        elevation="12"
+        class="pt-1 px-16"
+        @click="openSortSheet"
+      >
+        詳細検索
+      </v-btn>
       <!-- GoogleMapの表示 -->
       <GmapMap
-        ref="gmap"
+        ref="gmp"
         map-type-id="roadmap"
         :center="location"
         :zoom="zoom"
@@ -18,45 +29,40 @@
           :position="m.position"
           :clickable="true"
           :draggable="false"
+          :animation="m.animation"
           :icon="m.pinicon"
-          @click="onClickMarker(index, m)"
+          @click="openSheet(m)"
         />
-        <!-- 情報ウィンドウの表示 -->
-        <GmapInfoWindow
-          :options="infoOptions"
-          :position="infoWindowPos"
-          :opened="infoWinOpen"
-          @closeclick="infoWinOpen = false"
-        >
-          <h2 class="mb-1">
-            {{ marker.title }}
-          </h2>
-          <p class="mb-0">
-            {{ marker.address }}
-          </p>
-          <p class="mb-0">
-            開演時間：{{ marker.open }} 〜 {{ marker.close }}
-          </p>
-          <p>
-            席数：{{ marker.seats }}
-          </p>
-        </GmapInfoWindow>
       </GmapMap>
     </v-card>
+
+    <!-- 図書館詳細シート -->
+    <v-bottom-sheet v-model="sheet" hide-overlay persistent>
+      <Sheet :marker="marker" @reset-sheet="resetSheet" />
+    </v-bottom-sheet>
+
+    <!-- 詳細検索シート -->
+    <v-bottom-sheet v-model="sortSheet" scrollable hide-overlay>
+      <SortSheet @reset-sheet="resetSortSheet" @clear-sheet="getLibrary" @set-library="setLibrary" />
+    </v-bottom-sheet>
   </div>
 </template>
 
 <script>
+import Sheet from "../components/BaseSheet.vue";
+import SortSheet from "../components/BaseSortSheet.vue";
+
 export default {
-  name: 'IndexPage',
-  data () {
+  name: "IndexPage",
+  components: { Sheet, SortSheet },
+  data() {
     return {
       // 地図が表示される時の中心（東京駅の緯度経度）
       location: { lat: 35.6809591, lng: 139.7673068 },
       zoom: 11,
       styleMap: {
-        width: '100%',
-        height: '100%'
+        width: "100%",
+        height: "100%",
       },
       infoOptions: {
         minWidth: 200,
@@ -70,33 +76,65 @@ export default {
       mapOptions: {
         fullscreenControl: false,
         mapTypeControl: false,
-        styles: []
+        styles: [],
       },
-      marker: {},
       // マーカーを立てる配列
-      markers: []
-    }
+      markers: [],
+      // 単体の図書館情報を格納
+      marker: {},
+      // 図書館の詳細情報シート
+      sheet: false,
+      // 詳細検索シート
+      sortSheet: false,
+    };
   },
-  mounted () {
-    this.getLibrary()
+  mounted() {
+    this.getLibrary();
   },
   methods: {
     // 図書館一覧を取得
-    getLibrary () {
-      this.$axios.get('/api/libraries')
-        .then( res => {
-          this.markers = res.data.libraries
-        })
+    getLibrary() {
+      this.$axios.get("/api/libraries").then((res) => {
+        this.markers = res.data.libraries;
+      });
     },
-    // マーカークリック時の処理
-    onClickMarker(index, marker) {
-      // this.$refs.gmp.fitBounds(marker.position)
-      this.infoWindowPos = marker.position
-      this.marker = marker
-      this.infoWinOpen = true
+    setLibrary(libraries) {
+      this.markers = libraries;
     },
-  }
-}
+    // 詳細シートを表示
+    openSheet(marker) {
+      this.sortSheet = false;
+      if (this.sheet === true) {
+        this.sheet = false;
+        this.marker.animation = null;
+      }
+      this.$refs.gmp.panTo(marker.position);
+      this.sheet = true;
+      this.marker = marker;
+      this.marker.animation = 1;
+    },
+    // シートを非表示にしdataを空にする
+    resetSheet() {
+      this.sheet = false;
+      this.marker.animation = null;
+      this.marker = {};
+    },
+    // 詳細検索シートの表示
+    openSortSheet() {
+      this.sheet = false;
+      this.marker.animation = null;
+      if (this.sortSheet === true) {
+        this.sortSheet = false;
+      } else {
+        this.sortSheet = true;
+      }
+    },
+    // 詳細検索シートを非表示
+    resetSortSheet() {
+      this.sortSheet = false;
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -110,5 +148,13 @@ export default {
 .mv-wrap {
   position: relative;
   height: 93vh;
+}
+
+.mv-wrap > button {
+  position: absolute;
+  left: 2%;
+  top: 2%;
+  background-color: #fff;
+  z-index: 100;
 }
 </style>
