@@ -59,6 +59,9 @@ import SortSheet from '../components/BaseSortSheet.vue';
 export default {
   name: 'IndexPage',
   components: { Sheet, SortSheet },
+  asyncData({ $config: { backendBaseUrl } }) {
+    return { backendBaseUrl };
+  },
   data() {
     return {
       // 地図が表示される時の中心（東京駅の緯度経度）
@@ -98,7 +101,7 @@ export default {
   methods: {
     // 図書館一覧を取得
     getLibrary() {
-      this.$axios.get('/libraries').then((res) => {
+      this.$axios.get(`${this.backendBaseUrl}/libraries`).then((res) => {
         this.markers = res.data.libraries;
       });
     },

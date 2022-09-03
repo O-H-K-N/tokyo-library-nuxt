@@ -73,13 +73,13 @@ export default {
   methods: {
     // チェックボタンとして表示される自治体をすべて取得
     getAdministrations() {
-      this.$axios.get('/administrations').then((res) => {
+      this.$axios.get(`${this.$config.backendBaseUrl}/administrations`).then((res) => {
         this.administrations = res.data.administrations;
       });
     },
     // ラジオボタンとして表示されるサービスをすべて取得
     getServices() {
-      this.$axios.get('/services').then((res) => {
+      this.$axios.get(`${this.$config.backendBaseUrl}/services`).then((res) => {
         this.services = res.data.services;
       });
     },
@@ -91,7 +91,7 @@ export default {
         if (this.administrationGroup.length > 1) {
           this.$axios
             .get(
-              `/administrations/${this.administrationGroup[0]}?ids=${this.administrationGroup}&serviceId=${this.radioGroup}`
+              `${this.$config.backendBaseUrl}/administrations/${this.administrationGroup[0]}?ids=${this.administrationGroup}&serviceId=${this.radioGroup}`
             )
             .then((res) => {
               this.libraries = res.data.libraries;
@@ -102,7 +102,7 @@ export default {
         } else if (this.administrationGroup.length === 1) {
           this.$axios
             .get(
-              `/administrations/${this.administrationGroup[0]}?serviceId=${this.radioGroup}`
+              `${this.$config.backendBaseUrl}/administrations/${this.administrationGroup[0]}?serviceId=${this.radioGroup}`
             )
             .then((res) => {
               this.libraries = res.data.libraries;
@@ -118,7 +118,7 @@ export default {
       if (this.administrationGroup.length > 1) {
         this.$axios
           .get(
-            `/administrations/${this.administrationGroup[0]}?ids=${this.administrationGroup}`
+            `${this.$config.backendBaseUrl}/administrations/${this.administrationGroup[0]}?ids=${this.administrationGroup}`
           )
           .then((res) => {
             this.libraries = res.data.libraries;
@@ -126,7 +126,7 @@ export default {
           });
       } else if (this.administrationGroup.length === 1) {
         this.$axios
-          .get(`/administrations/${this.administrationGroup[0]}`)
+          .get(`${this.$config.backendBaseUrl}/administrations/${this.administrationGroup[0]}`)
           .then((res) => {
             this.libraries = res.data.libraries;
             this.$emit('set-library', this.libraries);
@@ -140,7 +140,7 @@ export default {
       // 自治体を踏まえた詳細検索
       if (this.administrationGroup.length > 0) {
         this.$axios
-          .get(`/services/${s.id}?administrationId=${this.administrationGroup}`)
+          .get(`${this.$config.backendBaseUrl}/services/${s.id}?administrationId=${this.administrationGroup}`)
           .then((res) => {
             this.libraries = res.data.libraries;
             console.log(this.libraries.length);
@@ -149,7 +149,7 @@ export default {
         return;
       }
       // 自治体を踏めない検索
-      this.$axios.get(`/services/${s.id}`).then((res) => {
+      this.$axios.get(`${this.$config.backendBaseUrl}/services/${s.id}`).then((res) => {
         this.libraries = res.data.libraries;
         console.log(this.libraries.length);
         this.$emit('set-library', this.libraries);

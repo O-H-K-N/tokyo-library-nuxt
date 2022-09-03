@@ -1,7 +1,14 @@
 import colors from 'vuetify/es5/util/colors'
+// 本番環境と開発環境の分岐用のフラグ
+const isProd = process.env.NODE_ENV == "production"
 
 export default {
-  // Global page headers: https://go.nuxtjs.dev/config-head
+
+  publicRuntimeConfig: {
+    baseUrl: isProd ? process.env.BASE_URL : "http://localhost:8000",
+    backendBaseUrl:
+      isProd ? process.env.BACKEND_BASE_URL : "http://localhost:3000/api/v1",
+  },
   head: {
     // titleTemplate: "%s - とうきょう図書館Map",
     title: 'とうきょう図書館Map',
@@ -24,19 +31,15 @@ export default {
     port: 8000,
   },
 
-  // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
   ],
 
-  // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/vue2-google-maps.js' },
   ],
 
-  // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
-  // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
@@ -46,23 +49,14 @@ export default {
     '@nuxtjs/dotenv',
   ],
 
-  // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
   ],
-
-  // Axios module configuration: https://go.nuxtjs.dev/config-axios
-  axios: {
-    // Workaround to avoid enforcing hard-coded localhost:3000: https://github.com/nuxt-community/axios-module/issues/308
-    baseURL: process.env.BASE_URL || 'http://localhost:3000/api/v1/',
-  },
 
   analytics: {
     collectionEnabled: true,
   },
 
-  // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
     theme: {
@@ -81,7 +75,6 @@ export default {
     }
   },
 
-  // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     extend(config, ctx) {},
     vendor: ['vue2-google-maps'],
