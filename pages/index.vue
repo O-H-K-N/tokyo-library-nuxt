@@ -12,6 +12,9 @@
       >
         詳細検索
       </v-btn>
+      <v-card elevation="9" outlined>
+        <h1 class="text-center py-1 px-2">{{ sortCount }}件</h1>
+      </v-card>
       <!-- GoogleMapの表示 -->
       <GmapMap
         ref="gmp"
@@ -93,6 +96,8 @@ export default {
       sheet: false,
       // 詳細検索シート
       sortSheet: false,
+      // ヒット件数
+      sortCount: 0,
     };
   },
   mounted() {
@@ -103,10 +108,12 @@ export default {
     getLibrary() {
       this.$axios.get(`${this.backendBaseUrl}/libraries`).then((res) => {
         this.markers = res.data.libraries;
+        this.sortCount = res.data.libraries.length
       });
     },
-    setLibrary(libraries) {
+    setLibrary(libraries, sortCount) {
       this.markers = libraries;
+      this.sortCount = sortCount;
     },
     // 詳細シートを表示
     openSheet(marker) {
@@ -160,6 +167,14 @@ export default {
 .mv-wrap > button {
   position: absolute;
   left: 2%;
+  top: 2%;
+  background-color: #fff;
+  z-index: 100;
+}
+
+.mv-wrap > .v-card {
+  position: absolute;
+  right: 2%;
   top: 2%;
   background-color: #fff;
   z-index: 100;

@@ -62,6 +62,8 @@ export default {
       services: [],
       // 詳細検索で取得した図書館を格納
       libraries: [],
+      // ヒット件数
+      sortCount: 0,
       administrationGroup: [],
       radioGroup: 0,
     };
@@ -73,9 +75,11 @@ export default {
   methods: {
     // チェックボタンとして表示される自治体をすべて取得
     getAdministrations() {
-      this.$axios.get(`${this.$config.backendBaseUrl}/administrations`).then((res) => {
-        this.administrations = res.data.administrations;
-      });
+      this.$axios
+        .get(`${this.$config.backendBaseUrl}/administrations`)
+        .then((res) => {
+          this.administrations = res.data.administrations;
+        });
     },
     // ラジオボタンとして表示されるサービスをすべて取得
     getServices() {
@@ -95,8 +99,8 @@ export default {
             )
             .then((res) => {
               this.libraries = res.data.libraries;
-              console.log(this.libraries);
-              this.$emit('set-library', this.libraries);
+              this.sortCount = res.data.libraries.length;
+              this.$emit('set-library', this.libraries, this.sortCount);
             });
           // 選択した自治体が単体の場合
         } else if (this.administrationGroup.length === 1) {
@@ -106,8 +110,8 @@ export default {
             )
             .then((res) => {
               this.libraries = res.data.libraries;
-              console.log(this.libraries);
-              this.$emit('set-library', this.libraries);
+              this.sortCount = res.data.libraries.length;
+              this.$emit('set-library', this.libraries, this.sortCount);
             });
         } else {
           this.clear();
@@ -122,14 +126,18 @@ export default {
           )
           .then((res) => {
             this.libraries = res.data.libraries;
-            this.$emit('set-library', this.libraries);
+            this.sortCount = res.data.libraries.length;
+            this.$emit('set-library', this.libraries, this.sortCount);
           });
       } else if (this.administrationGroup.length === 1) {
         this.$axios
-          .get(`${this.$config.backendBaseUrl}/administrations/${this.administrationGroup[0]}`)
+          .get(
+            `${this.$config.backendBaseUrl}/administrations/${this.administrationGroup[0]}`
+          )
           .then((res) => {
             this.libraries = res.data.libraries;
-            this.$emit('set-library', this.libraries);
+            this.sortCount = res.data.libraries.length;
+            this.$emit('set-library', this.libraries, this.sortCount);
           });
       } else {
         this.clear();
@@ -140,20 +148,24 @@ export default {
       // 自治体を踏まえた詳細検索
       if (this.administrationGroup.length > 0) {
         this.$axios
-          .get(`${this.$config.backendBaseUrl}/services/${s.id}?administrationId=${this.administrationGroup}`)
+          .get(
+            `${this.$config.backendBaseUrl}/services/${s.id}?administrationId=${this.administrationGroup}`
+          )
           .then((res) => {
             this.libraries = res.data.libraries;
-            console.log(this.libraries.length);
-            this.$emit('set-library', this.libraries);
+            this.sortCount = res.data.libraries.length;
+            this.$emit('set-library', this.libraries, this.sortCount);
           });
         return;
       }
       // 自治体を踏めない検索
-      this.$axios.get(`${this.$config.backendBaseUrl}/services/${s.id}`).then((res) => {
-        this.libraries = res.data.libraries;
-        console.log(this.libraries.length);
-        this.$emit('set-library', this.libraries);
-      });
+      this.$axios
+        .get(`${this.$config.backendBaseUrl}/services/${s.id}`)
+        .then((res) => {
+          this.libraries = res.data.libraries;
+          this.sortCount = res.data.libraries.length;
+          this.$emit('set-library', this.libraries, this.sortCount);
+        });
     },
     // シートを非表示
     resetSheet() {
