@@ -13,7 +13,9 @@
         詳細検索
       </v-btn>
       <v-card elevation="9" outlined>
-        <h1 class="text-center py-1 px-2">{{ sortCount }}件</h1>
+        <h1 class="text-center py-1 px-2">
+          {{ sortCount }}件
+        </h1>
       </v-card>
       <!-- GoogleMapの表示 -->
       <GmapMap

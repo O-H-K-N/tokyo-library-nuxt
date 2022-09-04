@@ -1,16 +1,15 @@
 import colors from 'vuetify/es5/util/colors'
 // 本番環境と開発環境の分岐用のフラグ
-const isProd = process.env.NODE_ENV == "production"
+const isProd = process.env.NODE_ENV === 'production'
 
 export default {
 
   publicRuntimeConfig: {
-    baseUrl: isProd ? process.env.BASE_URL : "http://localhost:8000",
+    baseUrl: isProd ? process.env.BASE_URL : 'http://localhost:8000',
     backendBaseUrl:
-      isProd ? process.env.BACKEND_BASE_URL : "http://localhost:3000/api/v1",
+      isProd ? process.env.BACKEND_BASE_URL : 'http://localhost:3000/api/v1',
   },
   head: {
-    // titleTemplate: "%s - とうきょう図書館Map",
     title: 'とうきょう図書館Map',
     htmlAttrs: {
       lang: 'ja'
@@ -36,6 +35,7 @@ export default {
 
   plugins: [
     { src: '~/plugins/vue2-google-maps.js' },
+    { src: '~/plugins/vue-apex-charts.js', mode: 'client' },
   ],
 
   components: true,
