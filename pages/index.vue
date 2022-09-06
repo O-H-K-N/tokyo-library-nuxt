@@ -36,14 +36,19 @@
           :draggable="false"
           :animation="m.animation"
           :icon="m.pinicon"
-          @click="openSheet(m)"
+          @click="openSheet(m, m.id)"
         />
       </GmapMap>
     </v-card>
 
     <!-- 図書館詳細シート -->
     <v-bottom-sheet v-model="sheet" hide-overlay persistent>
-      <Sheet :marker="marker" @reset-sheet="resetSheet" />
+      <Sheet
+        :marker="marker"
+        :series="series"
+        @reset-sheet="resetSheet"
+        @input-score="openScoreForm"
+      />
     </v-bottom-sheet>
 
     <!-- 詳細検索シート -->
@@ -54,16 +59,37 @@
         @set-library="setLibrary"
       />
     </v-bottom-sheet>
+
+    <v-dialog v-model="scoreForm" max-width="450px">
+      <ScoreForm
+        :marker="marker"
+        :marker-animation="markerAnimation"
+        :scores="scores"
+        @open-score-confirm="openScoreConfirm"
+      />
+    </v-dialog>
+
+    <v-dialog v-model="scoreConfirm" max-width="450px">
+      <ScoreConfirm
+        :marker="marker"
+        :marker-animation="markerAnimation"
+        :scores="scores"
+        @send-score="sendScore"
+        @cancel-score="cancelScore"
+      />
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import Sheet from '../components/BaseSheet.vue';
 import SortSheet from '../components/BaseSortSheet.vue';
+import ScoreForm from '../components/ScoreForm.vue';
+import ScoreConfirm from '../components/ScoreConfirm.vue';
 
 export default {
   name: 'IndexPage',
-  components: { Sheet, SortSheet },
+  components: { Sheet, SortSheet, ScoreForm, ScoreConfirm },
   asyncData({ $config: { backendBaseUrl } }) {
     return { backendBaseUrl };
   },
@@ -94,15 +120,37 @@ export default {
       markers: [],
       // 単体の図書館情報を格納
       marker: {},
+      // マーカーにアニメーションさせるためだけのオブジェクト
+      markerAnimation: {},
+      // レーダーチャートの値を格納(図書館の詳細情報シートにpropsで渡す)
+      series: [
+        {
+          name: '図書館評価スコア',
+          data: [0, 0, 0, 0, 0],
+        }
+      ],
+      // 入力される評価スコアを格納
+      scores: {
+        clean: 0,
+        comfort: 0,
+        silent: 0,
+        desk: 0,
+        crowd: 0,
+      },
       // 図書館の詳細情報シート
       sheet: false,
       // 詳細検索シート
       sortSheet: false,
+      // スコア入力フォーム
+      scoreForm: false,
+      // スコア入力確認フォーム
+      scoreConfirm: false,
       // ヒット件数
       sortCount: 0,
     };
   },
   mounted() {
+    // DOMが変わるたびに図書館一覧を取得して表示
     this.getLibrary();
   },
   methods: {
@@ -118,27 +166,38 @@ export default {
       this.sortCount = sortCount;
     },
     // 詳細シートを表示
-    openSheet(marker) {
+    openSheet(marker, id) {
       this.sortSheet = false;
       if (this.sheet === true) {
-        this.sheet = false;
-        this.marker.animation = null;
+        this.resetSheet();
       }
-      this.$refs.gmp.panTo(marker.position);
-      this.sheet = true;
-      this.marker = marker;
-      this.marker.animation = 1;
+      this.markerAnimation = marker;
+      this.markerAnimation.animation = 1;
+      this.$axios.get(`${this.backendBaseUrl}/libraries/${id}`).then((res) => {
+        this.marker = res.data.library
+        this.$refs.gmp.panTo(this.marker.position);
+        // レーダーチャートで表示される各値を計算し格納（少数第一位で四捨五入）
+        this.series[0].data[0] = Math.round(this.marker.comfort / this.marker.quantity * 10) / 10;
+        this.series[0].data[1] = Math.round(this.marker.clean / this.marker.quantity * 10) / 10;
+        this.series[0].data[2] = Math.round(this.marker.desk / this.marker.quantity * 10) / 10;
+        this.series[0].data[3] = Math.round(this.marker.crowd / this.marker.quantity * 10) / 10;
+        this.series[0].data[4] = Math.round(this.marker.silent / this.marker.quantity * 10) / 10;
+        // 5秒空けて実行
+        setTimeout(() => {
+          this.sheet = true;
+        }, 500)
+      })
     },
     // シートを非表示にしdataを空にする
     resetSheet() {
       this.sheet = false;
-      this.marker.animation = null;
+      this.markerAnimation.animation = null;
       this.marker = {};
     },
     // 詳細検索シートの表示
     openSortSheet() {
       this.sheet = false;
-      this.marker.animation = null;
+      this.markerAnimation.animation = null;
       if (this.sortSheet === true) {
         this.sortSheet = false;
       } else {
@@ -149,6 +208,44 @@ export default {
     resetSortSheet() {
       this.sortSheet = false;
     },
+    // 評価スコア入力フォームを表示
+    openScoreForm() {
+      this.scores = {
+        clean: 0,
+        comfort: 0,
+        silent: 0,
+        desk: 0,
+        crowd: 0,
+      };
+      this.scoreForm = true;
+    },
+    // スコア入力確認フォームを表示
+    openScoreConfirm(scores) {
+      // 評価スコア入力フォームを非表示
+      this.scoreForm = false;
+      this.scoreConfirm = true;
+      this.scores = scores;
+    },
+    // スコアを登録
+    sendScore(scores) {
+      this.$axios
+        .put(`${this.$config.backendBaseUrl}/libraries/${this.marker.id}`, {
+          library: scores,
+        })
+        .then((res) => {
+          if (res.data.status === 'ok') {
+            this.scoreConfirm = false;
+            this.openSheet(this.markerAnimation, this.marker.id);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // スコア入力確認フォームを非表示
+    cancelScore() {
+      this.scoreConfirm = false;
+    }
   },
 };
 </script>

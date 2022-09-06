@@ -52,6 +52,11 @@
         <div class="radar" style="margin: auto">
           <apexchart type="radar" height="350" :options="chartOptions" :series="series" />
         </div>
+        <div class="text-center">
+          <v-btn depressed outlined color="indigo" @click="inputScore">
+            評価する
+          </v-btn>
+        </div>
       </v-col>
     </v-row>
     <v-divider />
@@ -71,15 +76,13 @@ export default {
       type: Object,
       required: true,
     },
+    series: {
+      type: Array,
+      required: true,
+    },
   },
   data() {
     return {
-      series: [
-        {
-          name: '図書館評価スコア',
-          data: [4, 3, 2, 5, 3],
-        },
-      ],
       chartOptions: {
         chart: {
           type: 'radar',
@@ -126,6 +129,9 @@ export default {
     resetSheet() {
       this.$emit('reset-sheet');
     },
+    inputScore() {
+      this.$emit('input-score')
+    }
   },
 };
 </script>
