@@ -1,5 +1,5 @@
 <template>
-  <v-card class="mx-auto" max-height="300px">
+  <v-card class="mx-auto" max-height="450px">
     <v-card-text class="pb-0">
       <v-container fluid>
         <v-card-title class="font-weight-black px-0 pb-0">

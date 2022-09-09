@@ -2,10 +2,10 @@
   <v-card class="mx-auto">
     <v-row class="px-2">
       <v-col cols="12" lg="6">
-        <v-card-title class="font-weight-black pt-0 pb-1">
+        <a :href="marker.homepage" target="_blank" rel="noopener noreferrer" class="link font-weight-black ps-4">
           {{ marker.title }}
-        </v-card-title>
-        <v-card-subtitle class="py-2" style="color: grey">
+        </a>
+        <v-card-subtitle class="pt-0 pb-2" style="color: grey">
           {{ marker.address }}
         </v-card-subtitle>
         <v-card-subtitle class="py-0" style="color: slategray">
@@ -137,6 +137,16 @@ export default {
 </script>
 
 <style scoped>
+a {
+  color: inherit;
+  font-size: 22px;
+  text-decoration: none;
+}
+a:hover {
+  opacity: 0.7;
+  text-decoration: underline;
+}
+
 .radar {
   max-width: 450px;
   max-height: 300px;

@@ -1,7 +1,7 @@
 <template>
   <v-card class="pa-2">
     <h2 class="d-flex align-center justify-center">
-      {{ marker.title }}の評価入力確認
+      評価スコア入力確認
     </h2>
     <v-card-subtitle class="pa-0 d-flex align-center justify-center" style="color: slategray">
       以下で登録してよろしいですか？
@@ -37,14 +37,6 @@
 <script>
 export default {
   props: {
-    marker: {
-      type: Object,
-      required: true,
-    },
-    markerAnimation: {
-      type: Object,
-      required: true,
-    },
     scores: {
       type: Object,
       required: true,

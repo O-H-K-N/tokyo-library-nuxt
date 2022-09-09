@@ -36,7 +36,7 @@
           :draggable="false"
           :animation="m.animation"
           :icon="m.pinicon"
-          @click="openSheet(m, m.id)"
+          @click="openSheet(m)"
         />
       </GmapMap>
     </v-card>
@@ -166,14 +166,14 @@ export default {
       this.sortCount = sortCount;
     },
     // 詳細シートを表示
-    openSheet(marker, id) {
+    openSheet(marker) {
       this.sortSheet = false;
       if (this.sheet === true) {
         this.resetSheet();
       }
       this.markerAnimation = marker;
       this.markerAnimation.animation = 1;
-      this.$axios.get(`${this.backendBaseUrl}/libraries/${id}`).then((res) => {
+      this.$axios.get(`${this.backendBaseUrl}/libraries/${marker.id}`).then((res) => {
         this.marker = res.data.library
         this.$refs.gmp.panTo(this.marker.position);
         // レーダーチャートで表示される各値を計算し格納（少数第一位で四捨五入）
@@ -235,7 +235,7 @@ export default {
         .then((res) => {
           if (res.data.status === 'ok') {
             this.scoreConfirm = false;
-            this.openSheet(this.markerAnimation, this.marker.id);
+            this.openSheet(this.markerAnimation);
           }
         })
         .catch((err) => {
