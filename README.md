@@ -1,69 +1,25 @@
-# tokyo-library-nuxt
+# とうきょう図書館マップ
 
-## Build Setup
-
-```bash
-# install dependencies
-$ yarn install
-
-# serve with hot reload at localhost:3000
-$ yarn dev
-
-# build for production and launch server
-$ yarn build
-$ yarn start
-
-# generate static project
-$ yarn generate
-```
-
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
-
-## Special Directories
-
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
-
-### `assets`
-
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
-
-### `components`
-
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
-
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
+![スクリーンショット 2022-09-21 23 35 38](https://user-images.githubusercontent.com/81758321/191533474-a597185a-0097-4f58-9e91-9c422a38ad40.png)
 
 
-### `pages`
+## サービス概要
+図書館 × 自分に合った学びの場を見つけるサービス
 
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
+## サービス作成の背景
+『都知事杯Open Date Hackathon』予選での開発サービス。「日本は他国に比べて生涯学習人口の割合が低い」、「学習志向にある学生、社会人のための学びの場が少ない」などの学習習慣についての行政課題に着目し、学びの場を確保し、リカレント教育環境を促進させるという狙いからサービスを開発。
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
+## メインターゲットのユーザー
+- お金を使わず（無料で）学習する場所を確保したい人
+- 学習を始めた社会人、学生
 
-### `plugins`
+## 何ができるか？
+- 東京にある図書館をMap上で一覧で表示し、条件に合わせてソートできる
+- パソコンの使用有無や無料Wi-Fiの有無などのサービス情報を確認できる
+- 図書館ごとの特徴をレーダチャートで確認でき、 自分に合った環境の図書館を発見できる
 
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+## 使用技術
+### バックエンド:
+[Ruby on Rails（APIモード）](https://github.com/O-H-K-N/tokyo-library-rails)
+### フロント
+[Nuxt.js](https://github.com/O-H-K-N/tokyo-library-nuxt)
